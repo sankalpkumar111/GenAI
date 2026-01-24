@@ -3,3 +3,4 @@ langchain-google-genai
 dotenv
 langchain_openai
 streamlit
+langchain-ollama

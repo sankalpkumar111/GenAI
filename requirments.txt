@@ -4,3 +4,4 @@ dotenv
 langchain_openai
 streamlit
 langchain-ollama
+langchain-groq

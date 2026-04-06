@@ -8,3 +8,4 @@ langchain-groq
 langchain-community
 google-api-python-client
 langchain-google-community
+langgraph

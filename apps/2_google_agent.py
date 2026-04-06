@@ -1,36 +1,29 @@
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_google_community import GoogleSearchAPIWrapper
+from langchain_community.utilities import GoogleSerperAPIWrapper
 from langchain.agents import create_agent
-from langchain.tools import tool   # lowercase decorator, works in your version
+from langchain_groq import ChatGroq
+from langgraph.checkpoint.memory import MemorySaver  
+
 
 load_dotenv()
 
-# LLM
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+llm=ChatGroq(model="openai/gpt-oss-20b")
+search = GoogleSerperAPIWrapper()
+memory=MemorySaver()
 
-# Google Search wrapper
-search = GoogleSearchAPIWrapper()
-
-# Wrap search as a tool using decorator
-@tool
-def google_search(query: str) -> str:
-    """Search Google for up-to-date information"""
-    return search.run(query)
-
-# Create agent
-agent = create_agent(
-    model=llm,  
-    tools=[google_search],  # pass the decorated function
-    system_prompt="You are a helpful assistant. Use Google search when needed."
+agent=create_agent(
+    model=llm,
+    tools=[search.run],
+    checkpointer=memory,
+    system_prompt="You are a helpful assistant that can answer questions using the Google Search API. Use the search tool to find information and provide accurate answers to the user's queries."
+    
 )
 
-# Chat loop
 while True:
-    query = input("Ask me anything (or type 'exit' to quit): ")
-    if query.lower() == "exit":
+    query=input("You: ")
+    if query.lower()=="exit":
+        print("Existing")
         break
-
-    response = agent.invoke({"input": query, "content": query})
-
-    print("Answer:", response["output"])
+    res = agent.invoke({"messages":[{"role":"user","content":query}]}, 
+                 {"configurable": {"thread_id": "sankalp"}})
+    print("AI ",res["messages"][-1].content)

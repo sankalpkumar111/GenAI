@@ -6,9 +6,8 @@
 # Web Interface
 import os
 import streamlit as st
-
-os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
-os.environ["SERPER_API_KEY"] = st.secrets["SERPER_API_KEY"]
+from dotenv import load_dotenv
+load_dotenv()
 from langchain_groq import ChatGroq
 from langchain_community.utilities import GoogleSerperAPIWrapper
 from langchain.agents import create_agent

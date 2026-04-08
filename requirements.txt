@@ -12,4 +12,5 @@ langgraph
 pypdf
 beautifulsoup4
 wikipedia
-langchain_text_splitters
+langchain-text-splitters
+langchain-chroma
